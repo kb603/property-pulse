@@ -1,3 +1,3 @@
 export default function propertyAddPage() {
-  return <div></div>;
+  return <div>Property Add Page</div>;
 }
