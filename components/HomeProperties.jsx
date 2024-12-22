@@ -1,12 +1,14 @@
-import { Suspense } from "react";
-import properties from "../properties.json";
 import PropertyCard from "./PropertyCard";
 import Link from "next/link";
+import { fetchProperties } from "../utils/requests";
 
-export default function HomeProperties() {
+export default async function HomeProperties() {
+  const properties = await fetchProperties();
+
   const recentProperties = properties
     .sort(() => Math.random() - Math.random())
     .slice(0, 3);
+
   return (
     <>
       <section className="px-4 py-6">

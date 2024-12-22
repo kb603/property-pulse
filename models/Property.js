@@ -1,5 +1,4 @@
 import { Schema, model, models } from "mongoose";
-import { describe } from "node:test";
 
 const propertySchema = new Schema(
   {
@@ -68,4 +67,3 @@ const propertySchema = new Schema(
 const Property = models.Property || model("Property", propertySchema);
 
 export default Property;
-// In this snippet, we define the Property schema using the Schema constructor from mongoose. The schema defines the structure of the Property model, including the fields owner, name, type, description, location, beds, baths, square_feet, amenities, rates, seller_info, images, and is_featured. The schema also includes timestamps for createdAt and updatedAt fields.
