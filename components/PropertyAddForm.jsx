@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 
 export default function PropertyAddForm() {
-  const [mounted, setMounted] = useState(false);
   const [fields, setFields] = useState({
     type: "Apartment",
     name: "Test Property",
@@ -31,12 +30,69 @@ export default function PropertyAddForm() {
     images: [],
   });
 
-  const handleChange = () => {};
-  const handleAmentiesChange = () => {};
-  const handleImageChange = () => {};
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    // Check if nested property
+    if (name.includes(".")) {
+      const [outerKey, innerKey] = name.split(".");
+
+      setFields((prevFields) => ({
+        ...prevFields,
+        [outerKey]: { ...prevFields[outerKey], [innerKey]: value },
+      }));
+    } else {
+      // Not nested
+      setFields((prevFields) => ({
+        ...prevFields,
+        [name]: value,
+      }));
+    }
+  };
+  const handleAmentiesChange = ({ e }) => {
+    const { value, checked } = e.target;
+
+    // Clone the current array
+    const updatedAmenities = [...fields.amenities];
+
+    if (checked) {
+      // Add value to array
+      updatedAmenities.push(value);
+    } else {
+      // Remove value from array
+      const index = updatedAmenities.indexOf(value);
+
+      if (index !== -1) {
+        updatedAmenities.splice(index, 1);
+      }
+    }
+
+    // Update state with updated array
+    setFields((prevFields) => ({
+      ...prevFields,
+      amenities: updatedAmenities,
+    }));
+  };
+  const handleImageChange = (e) => {
+    const { files } = e.target;
+
+    // Clone images array
+    const updatedImages = [...fields.images];
+
+    // Add new files to the array
+    for (const file of files) {
+      updatedImages.push(file);
+    }
+
+    // Update state with array of images
+    setFields((prevFields) => ({
+      ...prevFields,
+      images: updatedImages,
+    }));
+  };
 
   return (
-    <form>
+    <form action="/api/properties" method="POST" encType="multipart/form-data">
       <h2 className="mb-6 text-center text-3xl font-semibold">Add Property</h2>
 
       <div className="mb-4">
@@ -450,7 +506,7 @@ export default function PropertyAddForm() {
           name="seller_info.email"
           className="w-full rounded border px-3 py-2"
           placeholder="Email address"
-          required
+          // required
           value={fields.seller_info.email}
           onChange={handleChange}
         />
@@ -484,7 +540,7 @@ export default function PropertyAddForm() {
           className="w-full rounded border px-3 py-2"
           accept="image/*"
           multiple
-          required
+          // required
           onChange={handleImageChange}
         />
       </div>
